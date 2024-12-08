@@ -17,11 +17,12 @@ const userSchema = new Schema({
     },
     otp: {
         type:Number,
+        required:false
     },
     otpExpiry: {
         type:Date,
         default:function(){
-            return Date.now() + (2*60*1000)
+            return Date.now() + (5*60*1000)
         }
     }
 })
