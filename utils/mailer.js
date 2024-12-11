@@ -3,7 +3,7 @@ import dotenv from 'dotenv'
 
 dotenv.config()
 
-export const sendMail = async(otp)=>{
+export const sendMail = async(otp,email)=>{
     try{
         const transporter = nodemailer.createTransport({
             host: "smtp.ethereal.email",
@@ -17,7 +17,7 @@ export const sendMail = async(otp)=>{
     
         const info = await transporter.sendMail({
             from: `"OTP Services" <${process.env.MAIL_USER}>`, 
-            to: "ubhangare32@gmail.com", 
+            to: email, 
             subject: "OTP SIGNUP", 
             text: `OTP IS : ${otp}`, 
         });
