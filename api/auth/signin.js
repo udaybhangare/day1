@@ -1,4 +1,5 @@
 import jwt from 'jsonwebtoken'
+import z from 'zod'
 import express from 'express'
 import dotenv from 'dotenv'
 import { User } from '../../db/schema.js'
@@ -8,14 +9,13 @@ export const routersignin = express.Router()
 
 routersignin.post('/', async(req, res) => {
     try {
-        const {email,otp}=req.body
+        const {email, otp} = req.body
+        const validation = z.object({
+            email: z.string().email(),
+            otp: z.string().length(6),
+        })
 
-        // const validation = z.object({
-        //     email: z.string().email(),
-        //     otp: z.string().length(6),
-        // })
-
-        // validation.parse({email,otp})
+        validation.parse({email,otp})
     
         const user = await User.findOne({email})
     
@@ -27,6 +27,7 @@ routersignin.post('/', async(req, res) => {
             await axios.get('http://localhost:3000/api/v1/auth/otp',{
                 params:{email}
             });
+            return res.status(400).json({message: "otp expired. new otp sent"})
         }
     
         if(user.otp != otp){
